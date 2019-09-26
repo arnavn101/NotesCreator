@@ -8,6 +8,9 @@ six==1.11.0
 SpeechRecognition==3.8.1
 tqdm==4.19.5
 uritemplate==3.0.0
-
-
-# ffmpeg -i /home/arnavn/Downloads/speech.wav  -f segment -segment_time 30 -c copy parts/t%09d.wav
+nltk
+bs4
+lxml
+ffmpeg
+pydub
+python-magic

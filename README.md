@@ -1,1 +1,1 @@
-# NotesCreator
+# NotesCreator (Summarizer & Text2Speech are OOPrograms)
