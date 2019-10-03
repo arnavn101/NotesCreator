@@ -13,6 +13,7 @@ class Summarizer():
         self.word_frequencies = {}
         self.sentence_scores = {}
         self.file_name = file_name
+        self.summary_finale = ""
         self.read_article()
         self.maximum_occurence()
         self.sentence_scoring()
@@ -33,9 +34,10 @@ class Summarizer():
 
     # Finding most important words in text
     def maximum_occurence(self):
-        stopwords = nltk.corpus.stopwords.words('english')
         nltk.download('stopwords')
         nltk.download('punkt')
+        stopwords = nltk.corpus.stopwords.words('english')
+        
         
         self.word_frequencies = {}
         for word in nltk.word_tokenize(self.formatted_article_text):
@@ -65,7 +67,7 @@ class Summarizer():
     # retrieving summarized text
     def finalize_summary(self, file_name, points):
         summary_sentences = heapq.nlargest(points, self.sentence_scores, key=self.sentence_scores.get)
-        summary = '\n'.join(summary_sentences)
+        summary = '\n\n\n'.join(summary_sentences)
         print(summary)
 
         self.write_summary(file_name, summary)
@@ -74,5 +76,9 @@ class Summarizer():
     def write_summary(self, file_name, summary):
         with open("finale.txt", "w+") as myfile:
             myfile.write(summary)
+        self.summary_finale = summary
 
-a = Summarizer("text.txt", 7)
+    def return_summary(self):
+        return self.summary_finale
+
+

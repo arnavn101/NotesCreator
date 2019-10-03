@@ -44,4 +44,3 @@ class Image2Text():
             file.write(content)
         print(content)
 
-a = Image2Text("text.txt", "image.jpg")

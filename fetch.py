@@ -22,4 +22,3 @@ def write_file(file_name, content):
 	with open(file_name, 'w+', encoding='utf-8') as file:
         	file.write(content)
 
-scrape_web("text.txt", "https://en.wikipedia.org/wiki/Artificial_intelligence")

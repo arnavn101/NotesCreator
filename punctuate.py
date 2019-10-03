@@ -3,7 +3,7 @@ import os
 import requests
 
 # Punctuating text with outside resource
-def convert(file_name):
+def convert_text(file_name):
         file = open(file_name, "r")
         text = file.read().replace('\n', '')
         url = 'http://bark.phon.ioc.ee/punctuator'
@@ -23,4 +23,3 @@ def write_file(file_name, content):
 	with open(file_name, 'w+') as file:
                 file.write(content)
 
-convert("text.txt")
