@@ -2,35 +2,46 @@ from os import system
 import cv2
 import pytesseract
 import numpy as np
-#system("tesseract -l eng *.jpg text.txt")
 
-def read_image(name):
-    img = cv2.imread(name)
-    img = cv2.resize(img, None, fx=1.2, fy=1.2, interpolation=cv2.INTER_CUBIC)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+class Image2Text():
+    # Define necessary variables
+    def __init__(self, file_name, image_name):
+        self.file_name = file_name
+        self.image_name = image_name
+        self.image = cv2.imread(self.image_name)
+        self.image_text()
 
-    kernel = np.ones((1, 1), np.uint8)
-    img = cv2.dilate(img, kernel, iterations=1)
-    img = cv2.erode(img, kernel, iterations=1)
-    return img
+    # convert image to np array & resize it appropriately
+    def manipulate_image(self):
+        self.image = cv2.resize(self.image, None, fx=1.2, fy=1.2, interpolation=cv2.INTER_CUBIC)
+        self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
 
-def perform_preprocessing(img):
-    cv2.threshold(cv2.GaussianBlur(img, (5, 5), 0), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    cv2.threshold(cv2.bilateralFilter(img, 5, 75, 75), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    cv2.threshold(cv2.medianBlur(img, 3), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+        kernel = np.ones((1, 1), np.uint8)
+        self.image = cv2.dilate(self.image, kernel, iterations=1)
+        self.image = cv2.erode(self.image, kernel, iterations=1)
 
-    cv2.adaptiveThreshold(cv2.GaussianBlur(img, (5, 5), 0), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
-    cv2.adaptiveThreshold(cv2.bilateralFilter(img, 9, 75, 75), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
-    cv2.adaptiveThreshold(cv2.medianBlur(img, 3), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
-    return img
+    # remove blur from image & make it more readable
+    def perform_preprocessing(self):
+        cv2.threshold(cv2.GaussianBlur(self.image, (5, 5), 0), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+        cv2.threshold(cv2.bilateralFilter(self.image, 5, 75, 75), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+        cv2.threshold(cv2.medianBlur(self.image, 3), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
-def image_text(name):
-    img = read_image(name)
-    img_optimized = perform_preprocessing(img)
-    result = pytesseract.image_to_string(img_optimized, lang="eng")
+        cv2.adaptiveThreshold(cv2.GaussianBlur(self.image, (5, 5), 0), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
+        cv2.adaptiveThreshold(cv2.bilateralFilter(self.image, 9, 75, 75), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
+        cv2.adaptiveThreshold(cv2.medianBlur(self.image, 3), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
 
-    with open("text.txt","w+") as myfile:
-        myfile.write(result)
-    print(result)
+    # convert image to text via pytesseract
+    def image_text(self):
+        self.manipulate_image()
+        self.perform_preprocessing()
+        #pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+        result = pytesseract.image_to_string(self.image, lang="eng")
+        self.write_file(result)
 
-image_text("essay.png")
+    # Writing contents of response to file
+    def write_file(self, content):
+        with open(self.file_name, 'w+') as file:
+            file.write(content)
+        print(content)
+
+a = Image2Text("text.txt", "image.jpg")

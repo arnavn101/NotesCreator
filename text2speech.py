@@ -71,3 +71,4 @@ class Text2Speech():
         with open(str(self.text_name), "w+") as f:
             f.write(self.transcript)
 
+a = Text2Speech(7, "text.txt")

@@ -20,7 +20,7 @@ class Summarizer():
 
     # Parsing text file
     def read_article(self):
-        with open(self.file_name, "r") as myfile:
+        with open(self.file_name, "r", encoding='utf-8') as myfile:
             self.article_text = myfile.read()
 
         # Removing Square Brackets and Extra Spaces
@@ -74,3 +74,5 @@ class Summarizer():
     def write_summary(self, file_name, summary):
         with open("finale.txt", "w+") as myfile:
             myfile.write(summary)
+
+a = Summarizer("text.txt", 7)

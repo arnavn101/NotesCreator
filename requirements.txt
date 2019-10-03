@@ -11,6 +11,10 @@ uritemplate==3.0.0
 nltk
 bs4
 lxml
-ffmpeg
+ffmpeg-python
 pydub
 python-magic
+numpy
+requests
+opencv-python
+pytesseract

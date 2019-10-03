@@ -2,19 +2,24 @@ import bs4 as bs
 import urllib.request
 import re
 
-def scrape_web(link):
+# Scrape text data from website
+def scrape_web(file_name, link):
     scraped_data = urllib.request.urlopen(link)
     article = scraped_data.read()
 
+    # parse paragraphs in article with lxml algorithm
     parsed_article = bs.BeautifulSoup(article,'lxml')
-
     paragraphs = parsed_article.find_all('p')
 
     article_text = ""
-
     for p in paragraphs:
         article_text += p.text
+
+    write_file(file_name, article_text)
     
-    with open("text.txt", "w+") as myfile:
-        myfile.write(article_text)
-scrape_web('https://en.wikipedia.org/wiki/Artificial_intelligence')
+# Writing contents of response to file
+def write_file(file_name, content):
+	with open(file_name, 'w+', encoding='utf-8') as file:
+        	file.write(content)
+
+scrape_web("text.txt", "https://en.wikipedia.org/wiki/Artificial_intelligence")
