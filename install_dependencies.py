@@ -1,10 +1,30 @@
 import progress_bar
 import os
 import urllib.request
+import zipfile
+import sys
+from shutil import copyfile
 
-def download_required():
-	print("\nDownloading ffmpeg dependencies\n")
-	urllib.request.urlretrieve("https://blob-us-east-1-jrihav.s3.amazonaws.com/sara/7c/7c8b/7c8b86b6-560b-4018-9c49-bad448a304ab.bin?response-content-disposition=attachment%3B%20filename%3D%22ffmpeg.exe%22&response-content-type=application%2Foctet-stream&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAI75SICYCOZ7DPWTA%2F20191010%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20191010T230008Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1800&X-Amz-Signature=7a12c57b5bebb6eabdf042b79cdea5dc3123c083e1c90a3faee1a42287b05c5d", "ffmpeg.exe", progress_bar.MyProgressBar()) # add windows/linux support
+cd = os.getcwd()
+
+def download_required(file_name, url):
+	print("\nDownloading " + file_name + "\n")
+	urllib.request.urlretrieve(url, file_name, progress_bar.MyProgressBar()) # add windows/linux support
 
 if not os.path.isfile("ffmpeg.exe") and os.name=="nt":
-	download_required()
+	download_required("ffmpeg.zip","https://www.videohelp.com/download/ffmpeg-4.2.1-win32-static.zip?r=bFphdJvGrFQ")
+
+	with zipfile.ZipFile("ffmpeg.zip", 'r') as zip_ref:
+		zip_ref.extractall(cd)
+
+	copyfile("ffmpeg-4.2.1-win32-static\\bin\\ffmpeg.exe", "ffmpeg.exe")
+
+if not os.path.isfile("C:\\Program Files\\Tesseract-OCR\\tesseract.exe") and os.name=="nt":
+	download_required("tesseract-ocr-w64-setup-v5.0.0-alpha.20191010.exe", "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.0-alpha.20191010.exe")
+	os.startfile("tesseract-ocr-w64-setup-v5.0.0-alpha.20191010.exe")
+
+if not os.path.isfile("glove.6B.100d.txt"):
+	download_required("glove.6B.zip", "http://nlp.stanford.edu/data/glove.6B.zip")
+
+	with zipfile.ZipFile("glove.6B.zip", 'r') as zip_ref:
+		zip_ref.extractall(cd)

@@ -20,3 +20,9 @@ opencv-python
 pytesseract
 flask
 progressbar
+waitress
+html5lib
+pandas
+sklearn
+networkx
+selenium

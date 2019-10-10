@@ -8,7 +8,7 @@ def scrape_web(file_name, link):
     article = scraped_data.read()
 
     # parse paragraphs in article with lxml algorithm
-    parsed_article = bs.BeautifulSoup(article,'lxml')
+    parsed_article = bs.BeautifulSoup(article,'html5lib')
     paragraphs = parsed_article.find_all('p')
 
     article_text = ""

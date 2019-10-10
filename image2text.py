@@ -2,6 +2,7 @@ from os import system
 import cv2
 import pytesseract
 import numpy as np
+import os
 
 class Image2Text():
     # Define necessary variables
@@ -34,7 +35,10 @@ class Image2Text():
     def image_text(self):
         self.manipulate_image()
         self.perform_preprocessing()
-        #pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
+        if os.name =="nt":
+            pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
         result = pytesseract.image_to_string(self.image, lang="eng")
         self.write_file(result)
 
@@ -43,4 +47,5 @@ class Image2Text():
         with open(self.file_name, 'w+') as file:
             file.write(content)
         print(content)
+
 

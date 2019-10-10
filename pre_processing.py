@@ -24,7 +24,7 @@ class PreProcessor():
 	def convert_audio(self):
 		if not os.path.isfile("audio.wav"):
 		    for filename in self.retrieve_files(os.getcwd()):
-		        if "Audio" in magic.from_file(filename) or "audio" in magic.from_file(filename):
+		        if "Audio" in magic.from_file(filename) or "audio" in magic.from_file(filename) or magic.from_file(filename)=="data":
 		            input = ffmpeg.input(filename)
 		            output = ffmpeg.output(input, "audio.wav", format="wav")
 		            ffmpeg.run(output)

@@ -9,42 +9,53 @@ from shutil import copyfile
 import urllib
 import os
 import progress_bar
+import paraphraser
+import tone_analysis
+import delete_useless.py
 
 app = Flask(__name__)
 
 def extract_extension(string):
-	return string[string.rindex('.')+1:] #add windows/linux support later
-
-@app.route('/')
-def data():
-   return render_template('test.html')
+	return string[string.rindex('.')+1:] 
 
 @app.route('/result', methods = ['POST', 'GET'])
 def result():
 	if request.method == 'POST':
-		bullet_points = request.form.get("bullet-points")
-		url = request.form.get("URL")
-		choice = request.form.get("choice")
-		cd = os.getcwd()
+		identifier = request.form.get("formIdentify")
 
-		if choice == "Website":
-			scrape_web("text.txt", url)
-		elif choice == "Image":
-			print("\nDownloading image\n")
-			urllib.request.urlretrieve(url, "audio." + extract_extension(url), progress_bar.MyProgressBar())
-			image2text.Image2Text("text.txt", "image_name")
-		elif choice == "Video":
-			print("\nDownloading video\n")
-			urllib.request.urlretrieve(url, "image." + extract_extension(url), progress_bar.MyProgressBar())
-			pre_processing.PreProcessor()
-			text2speech.Text2Speech(bullet_points, "text.txt")
-			convert_text("text.txt")
-
+		if identifier == "notes":
+			bullet_points = request.form.get("bullet_points")
+			url = request.form.get("URL")
+			choice = request.form.get("choice")
+			cd = os.getcwd()
+			if choice == "Website":
+				scrape_web("text.txt", url)
+			elif choice == "Image":
+				print("\nDownloading image\n")
+				urllib.request.urlretrieve(url, "image." + extract_extension(url), progress_bar.MyProgressBar())
+				image2text.Image2Text("text.txt", "image." + extract_extension(url))
+			elif choice == "Audio":
+				print("\nDownloading video\n")
+				urllib.request.urlretrieve(url, "video." + extract_extension(url), progress_bar.MyProgressBar())
+				pre_processing.PreProcessor()
+				text2speech.Text2Speech(bullet_points, "text.txt")
+				convert_text("text.txt")
+			a = summarizer.Summarizer("text.txt", int(bullet_points))
+			txt = (a.return_summary()).splitlines()
+			return render_template('results.html', value=txt)
 		
-		a = summarizer.Summarizer("text.txt", int(bullet_points))
-		txt = a.return_summary()
-		return render_template('results.html', value=txt)
+		elif identifier == "paraphrase":
+			text_required = request.form.get("text_paraphrase")
+			paraphraser_program = paraphraser.Paraphrase_Text(text_required)
+			paraphraser_text = [(paraphraser_program.return_paraphrased())]
+			return render_template('results.html', value=paraphraser_text)
+		
+		elif identifier == "tone_analyze":
+			text_required = request.form.get("text_toning")
+			toneAnalyzer_program = tone_analysis.Tone_Analysis(text_required)
+			resultant_text = ((toneAnalyzer_program.finale()).splitlines())
+			return render_template('results.html', value=resultant_text)
       
       
 if __name__ == '__main__':
-   app.run(host='127.0.0.1',port=12345)
+   app.run(host='0.0.0.0', port=12345)

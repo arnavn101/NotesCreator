@@ -48,7 +48,12 @@ class Text2Speech():
             audio = self.r.record(source)
             
         # Transcribe audio file
-        text = self.r.recognize_google(audio)
+        try:
+            text = self.r.recognize_google(audio)
+        except Exception:
+            print(name + " cannot be transcribed. File is either empty or it contains too much noise")
+            text = ""
+
         print(name + " done")
         return {
             "text": text
