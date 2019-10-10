@@ -5,6 +5,7 @@ import shutil
 import ffmpeg
 import glob
 import magic
+import sys
 
 class PreProcessor():
     def __init__(self):
@@ -25,6 +26,8 @@ class PreProcessor():
                     input = ffmpeg.input(filename)
                     output = ffmpeg.output(input, "audio.wav", format="wav")
                     ffmpeg.run(output)
+
+
 
     # divide audio into several parts
     def segment_audio(self):
@@ -47,3 +50,4 @@ class PreProcessor():
         else:
             shutil.rmtree(directory)
             os.makedirs(directory)
+
