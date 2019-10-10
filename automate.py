@@ -8,11 +8,12 @@ import text2speech
 from shutil import copyfile
 import urllib
 import os
+import progress_bar
 
 app = Flask(__name__)
 
-def extract_name(string):
-	return "\\" + string[string.rindex('/')+1:]
+def extract_extension(string):
+	return string[string.rindex('.')+1:] #add windows/linux support later
 
 @app.route('/')
 def data():
@@ -29,10 +30,12 @@ def result():
 		if choice == "Website":
 			scrape_web("text.txt", url)
 		elif choice == "Image":
-			urllib.request.urlretrieve(url, cd + extract_name(url))
+			print("\nDownloading image\n")
+			urllib.request.urlretrieve(url, "audio." + extract_extension(url), progress_bar.MyProgressBar())
 			image2text.Image2Text("text.txt", "image_name")
 		elif choice == "Video":
-			urllib.request.urlretrieve(url, cd + extract_name(url))
+			print("\nDownloading video\n")
+			urllib.request.urlretrieve(url, "image." + extract_extension(url), progress_bar.MyProgressBar())
 			pre_processing.PreProcessor()
 			text2speech.Text2Speech(bullet_points, "text.txt")
 			convert_text("text.txt")
