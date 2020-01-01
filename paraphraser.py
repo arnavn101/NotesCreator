@@ -16,8 +16,12 @@ class Paraphrase_Text():
         return self.result
 
     def configure_arguments(self):
+        self.chrome_options.add_argument("start-maximized") # open Browser in maximized mode
+        self.chrome_options.add_argument("disable-infobars") # disabling infobars
+        self.chrome_options.add_argument("--disable-extensions")
         self.chrome_options.add_argument("--headless")  
-        self.chrome_options.add_argument("--window-size=%s" % self.WINDOW_SIZE)
+        self.chrome_options.add_argument('--no-sandbox')
+        self.chrome_options.add_argument('--disable-dev-shm-usage')
 
     def run_chrome_driver(self):
         driver = webdriver.Chrome(self.executable_path, options=self.chrome_options)
@@ -34,3 +38,9 @@ class Paraphrase_Text():
 
         driver.close()
         return text_final
+
+
+
+#p = Paraphrase_Text("hello world")
+
+#print(p.return_paraphrased())

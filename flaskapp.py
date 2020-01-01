@@ -11,18 +11,18 @@ import os
 import progress_bar
 import paraphraser
 import tone_analysis
-import delete_useless.py
+from delete_useless import *
 
 app = Flask(__name__)
 
 def extract_extension(string):
 	return string[string.rindex('.')+1:] 
 
-@app.route('/result', methods = ['POST', 'GET'])
+@app.route('/', methods = ['POST', 'GET'])
 def result():
 	if request.method == 'POST':
 		identifier = request.form.get("formIdentify")
-
+		execute()		
 		if identifier == "notes":
 			bullet_points = request.form.get("bullet_points")
 			url = request.form.get("URL")
@@ -56,6 +56,7 @@ def result():
 			resultant_text = ((toneAnalyzer_program.finale()).splitlines())
 			return render_template('results.html', value=resultant_text)
       
+	return ""
       
 if __name__ == '__main__':
-   app.run(host='0.0.0.0', port=12345)
+   app.run(host='0.0.0.0')

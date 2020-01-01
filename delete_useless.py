@@ -21,4 +21,4 @@ def execute():
 	for element in to_remove:
 		findNremove(path, element)
 
-execute()
+
