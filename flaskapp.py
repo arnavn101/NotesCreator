@@ -33,27 +33,38 @@ def result():
 				url = request.form.get("URL")
 				choice = request.form.get("choice")
 				cd = os.getcwd()
+
 				if choice == "Website":
 					scrape_web("text.txt", url)
+
 				elif choice == "Image":
 					print("\nDownloading image\n")
 					urllib.request.urlretrieve(url, "image." + extract_extension(url), progress_bar.MyProgressBar())
 					image2text.Image2Text("text.txt", "image." + extract_extension(url))
+
+				elif choice == "Attachment":
+					print("Retrieving attached file")
+					file_uploaded = request.files['myfile']
+					filename = secure_filename(file_uploaded.filename)
+					filepath = os.path.join(cd, filename)
+					file_uploaded.save(filepath)
+					list_valid_extensions = ["txt", "doc", "pdf", "csv","jpg", "msg", "png", "docx"]
+					if extract_extension(filename) in list_valid_extensions: 
+						text = textract.process(filepath)
+						with open("text.txt", "wb+") as myfile:
+							myfile.write(text)		
+					else:
+						pre_processing.PreProcessor()
+						text2speech.Text2Speech(bullet_points, "text.txt")
+						convert_text("text.txt")
+						
 				elif choice == "Audio":
 					print("\nDownloading video\n")
 					urllib.request.urlretrieve(url, "video." + extract_extension(url), progress_bar.MyProgressBar())
 					pre_processing.PreProcessor()
 					text2speech.Text2Speech(bullet_points, "text.txt")
 					convert_text("text.txt")
-				elif choice == "Attachment":
-					print("Retrieving attached file")
-					file_uploaded = request.files['myfile']
-					filename = secure_filename(file_uploaded.filename)
-					filepath = os.path.join(cd, filename)
-					file_uploaded.save(filepath) 
-					text = textract.process(filepath)
-					with open("text.txt", "wb+") as myfile:
-						myfile.write(text)						
+							
 				a = summarizer.Summarizer("text.txt", int(bullet_points))
 				txt = (a.return_summary()).splitlines()
 				return render_template('results.html', value=txt)
