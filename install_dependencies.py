@@ -23,8 +23,3 @@ if not os.path.isfile("C:\\Program Files\\Tesseract-OCR\\tesseract.exe") and os.
 	download_required("tesseract-ocr-w64-setup-v5.0.0-alpha.20191010.exe", "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.0-alpha.20191010.exe")
 	os.startfile("tesseract-ocr-w64-setup-v5.0.0-alpha.20191010.exe")
 
-if not os.path.isfile("glove.6B.100d.txt"):
-	download_required("glove.6B.zip", "http://nlp.stanford.edu/data/glove.6B.zip")
-
-	with zipfile.ZipFile("glove.6B.zip", 'r') as zip_ref:
-		zip_ref.extractall(cd)
