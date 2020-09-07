@@ -1,0 +1,13 @@
+[Unit]
+Description=WSGI instance to serve flaskapp
+After=network.target
+
+[Service]
+User=smart
+Group=www-data
+WorkingDirectory=/home/smart/NotesCreator
+Environment="PATH=/home/smart/NotesCreator/flaskappenv/bin:/usr/bin:/bin"
+ExecStart=/home/smart/NotesCreator/flaskappenv/bin/python flaskapp.py
+
+[Install]
+WantedBy=multi-user.target
