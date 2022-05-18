@@ -41,7 +41,7 @@ On any Linux OS, clone this repository and setup API Keys
 and Flask Credentials within the config file
  
 
-      vim auth.cfg 
+      vim config.cfg 
       
 
 Install requirements of Python
